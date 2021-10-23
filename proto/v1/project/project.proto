@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "kofoworola/pbpractice/grpc/v1/project";
+
+package project;
+
+
+message CreateProjectRequest {
+	optional string name = 1;
+}
+
+message CreateProjectResponse {
+	optional string name = 1;
+	optional string api_key=2;
+}
+
+service InitService {
+	rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+}
+
+service ProjectService {
+  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+}

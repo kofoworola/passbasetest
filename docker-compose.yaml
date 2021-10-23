@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  postgres:
+    image: "postgres:13"
+    environment:
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "54320:5432"
+    volumes:
+      - passbase_data:/var/lib/postgresql/data
+
+volumes:
+  passbase_data:
