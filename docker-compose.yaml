@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  web:
+    build: .
+    environment: 
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_HOST: "postgres"
+      FIXER_APIKEY: "bdc32e8f330d5b1d2f3501c85f237b6a"
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+
+    
   postgres:
     image: "postgres:13"
     environment:

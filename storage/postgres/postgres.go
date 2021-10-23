@@ -11,12 +11,12 @@ import (
 )
 
 type Config struct {
-	DbHost       string `default:"localhost"`
-	DbPassword   string `required:"true"`
-	DbUsername   string `default:"postgres"`
-	DbName       string `default:"postgres"`
-	DBPort       string `default:"5432"`
-	DbMigrations string `default:"migrations"`
+	Host       string `default:"localhost"`
+	Password   string `required:"true"`
+	Username   string `default:"postgres"`
+	DbName     string `default:"postgres"`
+	Port       string `default:"5432"`
+	Migrations string `default:"migrations"`
 }
 
 type Storage struct {
@@ -29,11 +29,11 @@ type Storage struct {
 func New(cfg *Config) (*Storage, error) {
 	dbString := fmt.Sprintf(
 		"host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
-		cfg.DbHost,
-		cfg.DBPort,
-		cfg.DbUsername,
+		cfg.Host,
+		cfg.Port,
+		cfg.Username,
 		cfg.DbName,
-		cfg.DbPassword,
+		cfg.Password,
 	)
 
 	db, err := sqlx.Connect("postgres", dbString)
@@ -47,7 +47,7 @@ func New(cfg *Config) (*Storage, error) {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://"+cfg.DbMigrations,
+		"file://"+cfg.Migrations,
 		cfg.DbName,
 		driver,
 	)

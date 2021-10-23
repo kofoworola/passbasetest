@@ -6,8 +6,8 @@ import (
 )
 
 type Config struct {
-	Port     string `default:"3030"`
-	RestPort string `default:"3031"`
+	Port     string `default:"8080"`
+	RestPort string `default:"8081"`
 
 	Postgres postgres.Config
 	Fixer    fixer.Config

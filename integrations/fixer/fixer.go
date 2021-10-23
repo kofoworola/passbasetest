@@ -60,7 +60,6 @@ func (h *Handler) Convert(from, to string, amount float32) (float32, error) {
 	}
 
 	var payload responsePayload
-	payload.Success = true
 	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
 		return converted, fmt.Errorf("error reading body")
 	}

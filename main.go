@@ -3,9 +3,13 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -42,15 +46,28 @@ func main() {
 		log.Fatalf("error starting listener: %v", err)
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	go func() {
-		if err := setupGrpcGateway(&cfg); err != nil {
+		if err := setupGrpcGateway(ctx, &cfg); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
-	// TODO handle graceful shutdown
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
 	intercaptor := serverInterceptor{storage}
 	serv := grpc.NewServer(grpc.UnaryInterceptor(intercaptor.Interceptor()))
+
+	go func() {
+		<-done
+		fmt.Println("stopping service...")
+		cancel()
+		serv.GracefulStop()
+	}()
+
 	reflection.Register(serv)
 	projectpb.RegisterProjectServiceServer(serv, project.New(storage))
 	conversionpb.RegisterConversionServiceServer(serv, conversion.New(fixer.New(cfg.Fixer)))
@@ -59,11 +76,11 @@ func main() {
 	}
 }
 
-func setupGrpcGateway(config *Config) error {
+func setupGrpcGateway(ctx context.Context, config *Config) error {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 	if err := projectpb.RegisterProjectServiceHandlerFromEndpoint(
-		context.Background(),
+		ctx,
 		mux,
 		"localhost:"+config.Port,
 		opts,
@@ -72,7 +89,7 @@ func setupGrpcGateway(config *Config) error {
 	}
 
 	if err := conversionpb.RegisterConversionServiceHandlerFromEndpoint(
-		context.Background(),
+		ctx,
 		mux,
 		"localhost:"+config.Port,
 		opts,
