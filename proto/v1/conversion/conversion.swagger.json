@@ -1,0 +1,109 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "conversion/conversion.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ConversionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/conversion": {
+      "post": {
+        "summary": "ConvertAmount lets you convert an arbitrary amount from one currency to the other",
+        "operationId": "ConversionService_ConvertAmount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/conversionConvertAmountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/conversionConvertAmountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ConversionService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "conversionConvertAmountRequest": {
+      "type": "object",
+      "properties": {
+        "inputCurrency": {
+          "type": "string",
+          "title": "input_currency is the currecny we are converting from (currently only supports EUR)"
+        },
+        "amount": {
+          "type": "number",
+          "format": "float",
+          "title": "amount is the amount to be converted"
+        },
+        "outputCurrency": {
+          "type": "string",
+          "title": "output_currency is the currency to be converted to"
+        }
+      }
+    },
+    "conversionConvertAmountResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

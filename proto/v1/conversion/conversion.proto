@@ -4,9 +4,14 @@ option go_package = "kofoworola/pbpractice/grpc/v1/conversion";
 
 package conversion;
 
+import "google/api/annotations.proto";
+
 message ConvertAmountRequest {
+	// input_currency is the currecny we are converting from (currently only supports EUR)
 	optional string input_currency = 1;
+	// amount is the amount to be converted
 	optional float amount = 2;
+	// output_currency is the currency to be converted to
 	optional string output_currency = 3;
 }
 
@@ -15,6 +20,12 @@ message ConvertAmountResponse {
 }
 
 service ConversionService {
-	rpc ConvertAmount(ConvertAmountRequest) returns (ConvertAmountResponse);
+	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
+	rpc ConvertAmount(ConvertAmountRequest) returns (ConvertAmountResponse){
+		option (google.api.http) = {
+			post: "/v1/conversion"
+			body: "*"
+		};
+	}
 }
 

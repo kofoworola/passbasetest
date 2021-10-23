@@ -4,6 +4,7 @@ package conversion
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -18,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConversionServiceClient interface {
+	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
 	ConvertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error)
 }
 
@@ -42,13 +44,13 @@ func (c *conversionServiceClient) ConvertAmount(ctx context.Context, in *Convert
 // All implementations must embed UnimplementedConversionServiceServer
 // for forward compatibility
 type ConversionServiceServer interface {
+	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
 	ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
 
 // UnimplementedConversionServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedConversionServiceServer struct {
-}
+type UnimplementedConversionServiceServer struct{}
 
 func (UnimplementedConversionServiceServer) ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConvertAmount not implemented")
@@ -97,5 +99,5 @@ var ConversionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "conversion.proto",
+	Metadata: "conversion/conversion.proto",
 }

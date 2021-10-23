@@ -42,5 +42,4 @@ func (s *Storage) GetProjectByApiKey(ctx context.Context, apiKey string) (*stora
 		return nil, err
 	}
 	return &project, nil
-
 }

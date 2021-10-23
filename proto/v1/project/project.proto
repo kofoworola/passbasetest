@@ -4,16 +4,26 @@ option go_package = "kofoworola/pbpractice/grpc/v1/project";
 
 package project;
 
+import "google/api/annotations.proto";
 
 message CreateProjectRequest {
+	// name is the name of the new project
 	optional string name = 1;
 }
 
 message CreateProjectResponse {
+	// name is the name of the created project
 	optional string name = 1;
+	// api_key is the returned api key.
 	optional string api_key=2;
 }
 
 service ProjectService {
-	rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+	// CreateProject is called to create a new project with an api key
+	rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse){
+		option (google.api.http) = {
+			post: "/v1/project"
+			body: "*"
+		};
+	}
 }

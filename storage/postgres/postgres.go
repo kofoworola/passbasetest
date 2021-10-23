@@ -63,7 +63,6 @@ func New(cfg *Config) (*Storage, error) {
 }
 
 func (s *Storage) Migrate() error {
-
 	if err := s.migrate.Up(); err != nil {
 		return fmt.Errorf("error running migrations: %w", err)
 	}

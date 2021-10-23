@@ -50,6 +50,5 @@ func TestGetProject(t *testing.T) {
 		if err != sql.ErrNoRows {
 			t.Fatalf("expected %v gotten %v", sql.ErrNoRows, err)
 		}
-
 	})
 }

@@ -4,6 +4,7 @@ package project
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -18,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectServiceClient interface {
+	// CreateProject is called to create a new project with an api key
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error)
 }
 
@@ -42,13 +44,13 @@ func (c *projectServiceClient) CreateProject(ctx context.Context, in *CreateProj
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility
 type ProjectServiceServer interface {
+	// CreateProject is called to create a new project with an api key
 	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
 // UnimplementedProjectServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedProjectServiceServer struct {
-}
+type UnimplementedProjectServiceServer struct{}
 
 func (UnimplementedProjectServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
@@ -97,5 +99,5 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "project.proto",
+	Metadata: "project/project.proto",
 }
