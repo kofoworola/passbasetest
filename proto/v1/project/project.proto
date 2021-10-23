@@ -14,10 +14,6 @@ message CreateProjectResponse {
 	optional string api_key=2;
 }
 
-service InitService {
-	rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
-}
-
 service ProjectService {
-  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+	rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
 }

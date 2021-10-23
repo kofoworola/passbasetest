@@ -1,4 +1,4 @@
-package initproject
+package project
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 )
 
 type Service struct {
-	pb.UnimplementedInitServiceServer
+	pb.UnimplementedProjectServiceServer
 
 	storage createProjectStorage
 }

@@ -34,3 +34,13 @@ func (s *Storage) CreateProject(ctx context.Context, name, apiKey string) (*stor
 	}
 	return &project, nil
 }
+
+func (s *Storage) GetProjectByApiKey(ctx context.Context, apiKey string) (*storage.Project, error) {
+	stmt := `SELECT * FROM project WHERE api_key = $1`
+	var project storage.Project
+	if err := s.db.GetContext(ctx, &project, stmt, apiKey); err != nil {
+		return nil, err
+	}
+	return &project, nil
+
+}

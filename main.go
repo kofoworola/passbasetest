@@ -9,9 +9,9 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/kofoworola/passbasetest/integrations/fixer"
 	conversionpb "github.com/kofoworola/passbasetest/proto/v1/conversion"
-	"github.com/kofoworola/passbasetest/proto/v1/project"
+	projectpb "github.com/kofoworola/passbasetest/proto/v1/project"
 	"github.com/kofoworola/passbasetest/services/conversion"
-	"github.com/kofoworola/passbasetest/services/initproject"
+	"github.com/kofoworola/passbasetest/services/project"
 	"github.com/kofoworola/passbasetest/storage/postgres"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -37,9 +37,10 @@ func main() {
 	}
 
 	// TODO handle graceful shutdown
-	serv := grpc.NewServer()
+	intercaptor := serverInterceptor{storage}
+	serv := grpc.NewServer(grpc.UnaryInterceptor(intercaptor.Interceptor()))
 	reflection.Register(serv)
-	project.RegisterInitServiceServer(serv, initproject.New(storage))
+	projectpb.RegisterProjectServiceServer(serv, project.New(storage))
 	conversionpb.RegisterConversionServiceServer(serv, conversion.New(fixer.New(cfg.Fixer)))
 	if err := serv.Serve(listener); err != nil {
 		log.Fatal(err)
