@@ -35,7 +35,6 @@ func New(cfg *Config) (*Storage, error) {
 		cfg.DbName,
 		cfg.DbPassword,
 	)
-	fmt.Printf("db string is %s\n", dbString)
 
 	db, err := sqlx.Connect("postgres", dbString)
 	if err != nil {
