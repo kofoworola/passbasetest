@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConversionServiceClient interface {
-	CovertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error)
+	ConvertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error)
 }
 
 type conversionServiceClient struct {
@@ -29,9 +29,9 @@ func NewConversionServiceClient(cc grpc.ClientConnInterface) ConversionServiceCl
 	return &conversionServiceClient{cc}
 }
 
-func (c *conversionServiceClient) CovertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error) {
+func (c *conversionServiceClient) ConvertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error) {
 	out := new(ConvertAmountResponse)
-	err := c.cc.Invoke(ctx, "/conversion.ConversionService/CovertAmount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/conversion.ConversionService/ConvertAmount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (c *conversionServiceClient) CovertAmount(ctx context.Context, in *ConvertA
 // All implementations must embed UnimplementedConversionServiceServer
 // for forward compatibility
 type ConversionServiceServer interface {
-	CovertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error)
+	ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
 
@@ -50,8 +50,8 @@ type ConversionServiceServer interface {
 type UnimplementedConversionServiceServer struct {
 }
 
-func (UnimplementedConversionServiceServer) CovertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CovertAmount not implemented")
+func (UnimplementedConversionServiceServer) ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConvertAmount not implemented")
 }
 func (UnimplementedConversionServiceServer) mustEmbedUnimplementedConversionServiceServer() {}
 
@@ -66,20 +66,20 @@ func RegisterConversionServiceServer(s grpc.ServiceRegistrar, srv ConversionServ
 	s.RegisterService(&ConversionService_ServiceDesc, srv)
 }
 
-func _ConversionService_CovertAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConversionService_ConvertAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConvertAmountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConversionServiceServer).CovertAmount(ctx, in)
+		return srv.(ConversionServiceServer).ConvertAmount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/conversion.ConversionService/CovertAmount",
+		FullMethod: "/conversion.ConversionService/ConvertAmount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversionServiceServer).CovertAmount(ctx, req.(*ConvertAmountRequest))
+		return srv.(ConversionServiceServer).ConvertAmount(ctx, req.(*ConvertAmountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,8 +92,8 @@ var ConversionService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ConversionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CovertAmount",
-			Handler:    _ConversionService_CovertAmount_Handler,
+			MethodName: "ConvertAmount",
+			Handler:    _ConversionService_ConvertAmount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

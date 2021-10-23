@@ -7,7 +7,10 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/kofoworola/passbasetest/integrations/fixer"
+	conversionpb "github.com/kofoworola/passbasetest/proto/v1/conversion"
 	"github.com/kofoworola/passbasetest/proto/v1/project"
+	"github.com/kofoworola/passbasetest/services/conversion"
 	"github.com/kofoworola/passbasetest/services/initproject"
 	"github.com/kofoworola/passbasetest/storage/postgres"
 	"google.golang.org/grpc"
@@ -37,6 +40,7 @@ func main() {
 	serv := grpc.NewServer()
 	reflection.Register(serv)
 	project.RegisterInitServiceServer(serv, initproject.New(storage))
+	conversionpb.RegisterConversionServiceServer(serv, conversion.New(fixer.New(cfg.Fixer)))
 	if err := serv.Serve(listener); err != nil {
 		log.Fatal(err)
 	}

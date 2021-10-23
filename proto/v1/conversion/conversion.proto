@@ -7,7 +7,7 @@ package conversion;
 message ConvertAmountRequest {
 	optional string input_currency = 1;
 	optional float amount = 2;
-	optional string output_curreny = 3;
+	optional string output_currency = 3;
 }
 
 message ConvertAmountResponse {
@@ -15,6 +15,6 @@ message ConvertAmountResponse {
 }
 
 service ConversionService {
-	rpc CovertAmount(ConvertAmountRequest) returns (ConvertAmountResponse);
+	rpc ConvertAmount(ConvertAmountRequest) returns (ConvertAmountResponse);
 }
 
