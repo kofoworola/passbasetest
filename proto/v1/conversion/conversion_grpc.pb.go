@@ -4,7 +4,6 @@ package conversion
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type ConversionServiceClient interface {
 	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
 	ConvertAmount(ctx context.Context, in *ConvertAmountRequest, opts ...grpc.CallOption) (*ConvertAmountResponse, error)
+	// GetRate gets the converstion rate from <from> to <to>
+	GetRate(ctx context.Context, in *GetRateRequest, opts ...grpc.CallOption) (*GetRateResponse, error)
 }
 
 type conversionServiceClient struct {
@@ -40,20 +41,35 @@ func (c *conversionServiceClient) ConvertAmount(ctx context.Context, in *Convert
 	return out, nil
 }
 
+func (c *conversionServiceClient) GetRate(ctx context.Context, in *GetRateRequest, opts ...grpc.CallOption) (*GetRateResponse, error) {
+	out := new(GetRateResponse)
+	err := c.cc.Invoke(ctx, "/conversion.ConversionService/GetRate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConversionServiceServer is the server API for ConversionService service.
 // All implementations must embed UnimplementedConversionServiceServer
 // for forward compatibility
 type ConversionServiceServer interface {
 	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
 	ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error)
+	// GetRate gets the converstion rate from <from> to <to>
+	GetRate(context.Context, *GetRateRequest) (*GetRateResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
 
 // UnimplementedConversionServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedConversionServiceServer struct{}
+type UnimplementedConversionServiceServer struct {
+}
 
 func (UnimplementedConversionServiceServer) ConvertAmount(context.Context, *ConvertAmountRequest) (*ConvertAmountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConvertAmount not implemented")
+}
+func (UnimplementedConversionServiceServer) GetRate(context.Context, *GetRateRequest) (*GetRateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRate not implemented")
 }
 func (UnimplementedConversionServiceServer) mustEmbedUnimplementedConversionServiceServer() {}
 
@@ -86,6 +102,24 @@ func _ConversionService_ConvertAmount_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ConversionService_GetRate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConversionServiceServer).GetRate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/conversion.ConversionService/GetRate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConversionServiceServer).GetRate(ctx, req.(*GetRateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ConversionService_ServiceDesc is the grpc.ServiceDesc for ConversionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -96,6 +130,10 @@ var ConversionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConvertAmount",
 			Handler:    _ConversionService_ConvertAmount_Handler,
+		},
+		{
+			MethodName: "GetRate",
+			Handler:    _ConversionService_GetRate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

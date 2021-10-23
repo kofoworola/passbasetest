@@ -31,9 +31,7 @@ type responsePayload struct {
 // Base is removed due to api limit
 const convertEndpoint = "http://data.fixer.io/api/latest?access_key=%s&symbols=%s"
 
-func (h *Handler) Convert(from, to string, amount float32) (float32, error) {
-	var converted float32
-
+func (h *Handler) Convert(from, to string) (float32, error) {
 	parsedEndpoint := fmt.Sprintf(
 		convertEndpoint,
 		h.apiKey,
@@ -43,7 +41,7 @@ func (h *Handler) Convert(from, to string, amount float32) (float32, error) {
 
 	req, err := http.NewRequest(http.MethodGet, parsedEndpoint, nil)
 	if err != nil {
-		return converted, err
+		return 0, err
 	}
 	client := http.Client{
 		Timeout: time.Second * 30,
@@ -51,28 +49,26 @@ func (h *Handler) Convert(from, to string, amount float32) (float32, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return converted, err
+		return 0, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusInternalServerError {
-		return converted, fmt.Errorf("error with fixed api")
+		return 0, fmt.Errorf("error with fixed api")
 	}
 
 	var payload responsePayload
 	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
-		return converted, fmt.Errorf("error reading body")
+		return 0, fmt.Errorf("error reading body")
 	}
 	if !payload.Success {
-		return converted, fmt.Errorf("%s:%s", payload.Error.Type, payload.Error.Info)
+		return 0, fmt.Errorf("%s:%s", payload.Error.Type, payload.Error.Info)
 	}
 
 	rate, ok := payload.Rates[to]
 	if !ok {
-		return converted, fmt.Errorf("invalid api response")
+		return 0, fmt.Errorf("invalid api response")
 	}
 
-	converted = rate * amount
-
-	return converted, nil
+	return rate, nil
 }

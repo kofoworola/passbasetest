@@ -48,6 +48,43 @@
           "ConversionService"
         ]
       }
+    },
+    "/v1/rates": {
+      "get": {
+        "summary": "GetRate gets the converstion rate from \u003cfrom\u003e to \u003cto\u003e",
+        "operationId": "ConversionService_GetRate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/conversionGetRateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ConversionService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -73,6 +110,15 @@
       "type": "object",
       "properties": {
         "amount": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "conversionGetRateResponse": {
+      "type": "object",
+      "properties": {
+        "rate": {
           "type": "number",
           "format": "float"
         }

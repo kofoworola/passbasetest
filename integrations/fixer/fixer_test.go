@@ -15,14 +15,13 @@ func TestFixerIntegration(t *testing.T) {
 	}
 
 	handler := New(config)
-	input := float32(300.0)
-	out, err := handler.Convert("EUR", "EUR", input)
+	rate, err := handler.Convert("EUR", "EUR")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if out != input {
-		t.Fatalf("expected %f got %f", input, out)
+	if rate != 1 {
+		t.Fatalf("expected 1 got %f", rate)
 	}
 }
 
@@ -31,8 +30,7 @@ func TestInvalidApiKey(t *testing.T) {
 	handler := New(Config{
 		ApiKey: "dummy-key",
 	})
-	input := float32(300.0)
-	_, err := handler.Convert("USD", "USD", input)
+	_, err := handler.Convert("USD", "USD")
 	if err == nil || !strings.Contains(err.Error(), "You have not supplied a valid API Access Key") {
 		t.Fatalf("expected invalid api key error got %v", err)
 	}

@@ -7,12 +7,11 @@
 package project
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -169,14 +168,11 @@ func file_project_project_proto_rawDescGZIP() []byte {
 	return file_project_project_proto_rawDescData
 }
 
-var (
-	file_project_project_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-	file_project_project_proto_goTypes  = []interface{}{
-		(*CreateProjectRequest)(nil),  // 0: project.CreateProjectRequest
-		(*CreateProjectResponse)(nil), // 1: project.CreateProjectResponse
-	}
-)
-
+var file_project_project_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_project_project_proto_goTypes = []interface{}{
+	(*CreateProjectRequest)(nil),  // 0: project.CreateProjectRequest
+	(*CreateProjectResponse)(nil), // 1: project.CreateProjectResponse
+}
 var file_project_project_proto_depIdxs = []int32{
 	0, // 0: project.ProjectService.CreateProject:input_type -> project.CreateProjectRequest
 	1, // 1: project.ProjectService.CreateProject:output_type -> project.CreateProjectResponse

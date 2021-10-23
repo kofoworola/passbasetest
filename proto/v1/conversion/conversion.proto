@@ -19,12 +19,28 @@ message ConvertAmountResponse {
 	optional float amount=1;
 }
 
+message GetRateRequest {
+	optional string from = 1;
+	optional string to = 2;
+}
+
+message GetRateResponse {
+	optional float rate = 1;
+}
+
 service ConversionService {
 	// ConvertAmount lets you convert an arbitrary amount from one currency to the other
 	rpc ConvertAmount(ConvertAmountRequest) returns (ConvertAmountResponse){
 		option (google.api.http) = {
 			post: "/v1/conversion"
 			body: "*"
+		};
+	}
+
+	// GetRate gets the converstion rate from <from> to <to>
+	rpc GetRate(GetRateRequest) returns (GetRateResponse){
+		option(google.api.http) = {
+			get: "/v1/rates"
 		};
 	}
 }
