@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "kofoworola/pbpractice/grpc/v1/conversion";
+
+package conversion;
+
+message ConvertAmountRequest {
+	optional string input_currency = 1;
+	optional float amount = 2;
+	optional string output_curreny = 3;
+}
+
+message ConvertAmountResponse {
+	optional float amount=1;
+}
+
+service ConversionService {
+	rpc CovertAmount(ConvertAmountRequest) returns (ConvertAmountResponse);
+}
+
